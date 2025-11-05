@@ -1,0 +1,387 @@
+# =====================================
+# Executáveis e Binários (Todas as Plataformas)
+# =====================================
+
+# Executáveis Unix/Linux/macOS
+*.out
+*.app
+*.elf
+a.out
+
+# Executáveis Windows
+*.exe
+*.bat
+*.cmd
+*.com
+*.dll
+*.pdb
+*.ilk
+
+# Bibliotecas compartilhadas Unix/Linux
+*.so
+*.so.*
+*.dylib
+
+# Bibliotecas estáticas
+*.a
+*.lib
+*.la
+*.lo
+
+# =====================================
+# Arquivos de Compilação e Objetos
+# =====================================
+
+# Arquivos objeto
+*.o
+*.obj
+*.ko
+*.elf
+
+# Arquivos pré-compilados
+*.gch
+*.pch
+
+# Bibliotecas dinâmicas
+*.dll
+*.so
+*.dylib
+
+# Arquivos de linker
+*.map
+*.exp
+
+# Arquivos assembly
+*.s
+*.S
+
+# =====================================
+# Build Systems
+# =====================================
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+build/
+Build/
+BUILD/
+
+# Make
+*.d
+.depend
+*.dep
+
+# Autotools
+.deps/
+.libs/
+*.la
+*.lo
+Makefile
+Makefile.in
+/autom4te.cache
+/aclocal.m4
+/compile
+/configure
+/depcomp
+/install-sh
+/missing
+/config.guess
+/config.sub
+/config.h
+/config.h.in
+/config.log
+/config.status
+/libtool
+/ltmain.sh
+/stamp-h1
+.dirstamp
+
+# Meson
+/builddir/
+/subprojects/**/
+
+# Ninja
+.ninja_deps
+.ninja_log
+build.ninja
+
+# =====================================
+# IDEs e Editores
+# =====================================
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.iml
+*.vcxproj.filters
+*.vcxproj.user
+*.VC.db
+*.VC.VC.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+ipch/
+*.ipch
+x64/
+x86/
+Debug/
+Release/
+MinSizeRel/
+RelWithDebInfo/
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+# JetBrains IDEs (CLion, IntelliJ, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+cmake-build-*/
+.idea_modules/
+
+# Eclipse CDT
+.cproject
+.project
+.settings/
+.metadata/
+
+# NetBeans
+nbproject/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Code::Blocks
+*.cbp
+*.layout
+*.depend
+
+# Xcode
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~
+.*.sw[a-z]
+.netrwhist
+tags
+Session.vim
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# =====================================
+# Sistemas Operacionais
+# =====================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+*.stackdump
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+# =====================================
+# Ferramentas de Debug e Profile
+# =====================================
+
+# GDB
+.gdb_history
+
+# Valgrind
+*.log
+vgcore.*
+callgrind.out.*
+cachegrind.out.*
+massif.out.*
+
+# Core dumps
+core
+core.*
+*.core
+*.dmp
+
+# Address Sanitizer
+*.asan
+
+# Thread Sanitizer
+*.tsan
+
+# Memory Sanitizer
+*.msan
+
+# Leak Sanitizer
+*.lsan
+
+# =====================================
+# Testes e Coverage
+# =====================================
+
+# Coverage
+*.gcda
+*.gcno
+*.gcov
+coverage/
+*.coverage
+htmlcov/
+.coverage.*
+lcov.info
+*.profdata
+*.profraw
+
+# Unit tests
+test_results/
+test-results/
+TestResults/
+
+# =====================================
+# Dependências e Pacotes
+# =====================================
+
+# vcpkg
+vcpkg_installed/
+.vcpkg-root
+
+# Conan
+conan.lock
+conanbuildinfo.*
+conaninfo.txt
+
+# Package managers
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.rar
+
+# =====================================
+# Logs e Temporários
+# =====================================
+
+# Logs
+*.log
+logs/
+*.tmp
+
+# Temporários
+tmp/
+temp/
+*.temp
+*.bak
+*.backup
+*~
+
+# =====================================
+# Documentação Gerada
+# =====================================
+
+# Doxygen
+html/
+latex/
+Doxyfile.bak
+
+# Man pages geradas
+*.1
+*.2
+*.3
+*.4
+*.5
+*.6
+*.7
+*.8
+
+# =====================================
+# Arquivos Específicos do Projeto
+# =====================================
+
+# Executável principal (se houver nome específico)
+loopplayer
+LoopPlayer
+loop_player
+
+# Arquivos de configuração local
+config.local
+*.local
+
+# Assets de desenvolvimento
+*.wav
+*.mp3
+*.ogg
+*.flac
+*.aac
+playlist.txt
