@@ -16,8 +16,8 @@ A natureza **circular** da lista é perfeita para a função "Repetir", e a capa
 * **Remover Música:** Remove uma música específica da lista.
 * **Listar Músicas:** Exibe todas as músicas na ordem.
 * **Navegação:**
-    * `Próxima`: Avança para a próxima música.
-    * `Anterior`: Retorna para a música anterior.
+    * `Próxima`: Avança para a próxima música.
+    * `Anterior`: Retorna para a música anterior.
 * **Repetição (Looping):** Ao chegar ao fim da lista, "Próxima" leva automaticamente de volta à primeira música (e vice-versa com "Anterior").
 
 *(Opcional: Adicione se planeja fazer)*
@@ -38,21 +38,28 @@ Isso elimina a necessidade de ponteiros `NULL` de início/fim e simplifica a ló
 
 *(Instruções básicas para um compilador C)*
 
-1.  Clone o repositório:
-    ```bash
-    git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
-    cd seu-repositorio
-    ```
+1.  Clone o repositório:
+    ```bash
+    git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
+    cd seu-repositorio
+    ```
 
-2.  Compile o projeto (usando GCC como exemplo):
-    ```bash
-    gcc -o player *.c -Wall
-    ```
+2.  Compile o projeto (usando GCC como exemplo):
+    ```bash
+    gcc -o player *.c -Wall
+    ```
 
-3.  Execute o programa:
-    ```bash
-    ./player
-    ```
+3.  Execute o programa:
+    ```bash
+    ./player
+    ```
+
+## 🧑‍💻 Desenvolvedores
+
+* Miguel Maximus
+* Bruna Cayres
+* Mateus Mello
+* Maria Eduarda
 
 ---
 Feito com C puro e um 🎧!
