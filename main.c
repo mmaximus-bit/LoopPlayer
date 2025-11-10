@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "looplayer.h"
+
+void limpar_tela() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+void exibir_menu() {
+    printf("\n=== LoopPlayer Menu ===\n");
+    printf("1. Inserir música\n");
+    printf("2. Próxima música\n");
+    printf("3. Música anterior\n");
+    printf("4. Listar músicas\n");
+    printf("0. Sair\n");
+    printf("\nEscolha uma opção: ");
+}
+
+int main() {
+    LoopPlayer* player = criar_player();
+    int opcao;
+    char titulo[100];
+
+    do {
+        limpar_tela();
+        if (!esta_vazia(player)) {
+            Musica* atual = obter_musica_atual(player);
+            printf("\nMúsica atual: %s\n", atual->titulo);
+        }
+        exibir_menu();
+        scanf("%d", &opcao);
+        getchar(); // Limpar o buffer
+
+        switch(opcao) {
+            case 1:
+                printf("Digite o título da música: ");
+                fgets(titulo, sizeof(titulo), stdin);
+                titulo[strcspn(titulo, "\n")] = 0; // Remover o \n
+                if (inserir_musica(player, titulo)) {
+                    printf("Música inserida com sucesso!\n");
+                }
+                break;
+
+            case 2:
+                if (proxima_musica(player)) {
+                    printf("Próxima música selecionada.\n");
+                } else {
+                    printf("Playlist vazia!\n");
+                }
+                break;
+
+            case 3:
+                if (musica_anterior(player)) {
+                    printf("Música anterior selecionada.\n");
+                } else {
+                    printf("Playlist vazia!\n");
+                }
+                break;
+
+            case 4:
+                printf("\nPlaylist completa:\n");
+                listar_musicas(player);
+                printf("\nPressione ENTER para continuar...");
+                getchar();
+                break;
+
+            case 0:
+                printf("Saindo...\n");
+                break;
+
+            default:
+                printf("Opção inválida!\n");
+        }
+
+        if (opcao != 0 && opcao != 4) {
+            printf("Pressione ENTER para continuar...");
+            getchar();
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}

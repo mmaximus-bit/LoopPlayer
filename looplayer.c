@@ -81,3 +81,11 @@ int musica_anterior(LoopPlayer* player) {
     player->atual = player->atual->anterior;
     return 1;
 }
+
+// Obter música atual
+Musica* obter_musica_atual(LoopPlayer* player) {
+    if (esta_vazia(player)) {
+        return NULL;
+    }
+    return player->atual;
+}
