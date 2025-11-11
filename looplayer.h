@@ -15,31 +15,151 @@ typedef struct {
     int quantidade;          // Quantidade de músicas na lista
 } LoopPlayer;
 
-// Funções essenciais (criar/destruir)
+/**
+ * @brief Cria um novo player de músicas.
+ * 
+ * @return Retorna um ponteiro para o LoopPlayer criado, ou NULL em caso de falha na alocação.
+ */
 LoopPlayer* criar_player();
+
+/**
+ * @brief Destrói o player e libera toda a memória alocada.
+ * 
+ * @param player Ponteiro para o LoopPlayer a ser destruído.
+ */
 void destruir_player(LoopPlayer* player);
 
-// Funções de manipulação da lista circular
+/**
+ * @brief Insere uma nova música no final da playlist.
+ * 
+ * @param player Ponteiro para o LoopPlayer onde a música será inserida.
+ * @param titulo String contendo o título da música a ser inserida.
+ * 
+ * @return Retorna 1 se a inserção for bem-sucedida, ou 0 em caso de falha.
+ */
 int inserir_musica(LoopPlayer* player, const char* titulo);
+
+/**
+ * @brief Insere uma nova música no início da playlist.
+ * 
+ * @param player Ponteiro para o LoopPlayer onde a música será inserida.
+ * @param titulo String contendo o título da música a ser inserida.
+ * 
+ * @return Retorna 1 se a inserção for bem-sucedida, ou 0 em caso de falha.
+ */
 int inserir_musica_inicio(LoopPlayer* player, const char* titulo);
+
+/**
+ * @brief Insere uma nova música após uma música específica na playlist.
+ * 
+ * @param player Ponteiro para o LoopPlayer onde a música será inserida.
+ * @param titulo_ref String com o título da música de referência.
+ * @param novo_titulo String com o título da nova música a ser inserida.
+ * 
+ * @return Retorna 1 se a inserção for bem-sucedida, ou 0 em caso de falha.
+ */
 int inserir_musica_apos(LoopPlayer* player, const char* titulo_ref, const char* novo_titulo);
+
+/**
+ * @brief Remove uma música da playlist pelo título.
+ * 
+ * @param player Ponteiro para o LoopPlayer de onde a música será removida.
+ * @param titulo String contendo o título da música a ser removida.
+ * 
+ * @return Retorna 1 se a remoção for bem-sucedida, ou 0 se a música não for encontrada.
+ */
 int remover_musica(LoopPlayer* player, const char* titulo);
 
-// Funções de consulta
+/**
+ * @brief Busca uma música na playlist pelo título.
+ * 
+ * @param player Ponteiro para o LoopPlayer onde a busca será realizada.
+ * @param titulo String contendo o título da música a ser buscada.
+ * 
+ * @return Retorna um ponteiro para a Musica encontrada, ou NULL se não encontrada.
+ */
 Musica* buscar_musica(LoopPlayer* player, const char* titulo);
+
+/**
+ * @brief Verifica se a playlist está vazia.
+ * 
+ * @param player Ponteiro para o LoopPlayer a ser verificado.
+ * 
+ * @return Retorna 1 se a playlist estiver vazia, ou 0 caso contrário.
+ */
 int esta_vazia(LoopPlayer* player);
+
+/**
+ * @brief Lista todas as músicas da playlist na ordem normal.
+ * 
+ * @param player Ponteiro para o LoopPlayer cuja playlist será listada.
+ */
 void listar_musicas(LoopPlayer* player);
+
+/**
+ * @brief Lista todas as músicas da playlist na ordem reversa.
+ * 
+ * @param player Ponteiro para o LoopPlayer cuja playlist será listada.
+ */
 void listar_musicas_reverso(LoopPlayer* player);
 
-// Funções de controle do player
+/**
+ * @brief Inicia a reprodução da música atual.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 se a playlist estiver vazia.
+ */
 int tocar_musica(LoopPlayer* player);
+
+/**
+ * @brief Avança para a próxima música na playlist.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 se a playlist estiver vazia.
+ */
 int proxima_musica(LoopPlayer* player);
+
+/**
+ * @brief Retrocede para a música anterior na playlist.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 se a playlist estiver vazia.
+ */
 int musica_anterior(LoopPlayer* player);
+
+/**
+ * @brief Para a reprodução atual.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ */
 void parar_reproducao(LoopPlayer* player);
 
-// Funções utilitárias
+/**
+ * @brief Obtém a quantidade total de músicas na playlist.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * 
+ * @return Retorna o número de músicas na playlist.
+ */
 int obter_quantidade_musicas(LoopPlayer* player);
+
+/**
+ * @brief Obtém a música atualmente selecionada.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * 
+ * @return Retorna um ponteiro para a Musica atual, ou NULL se a playlist estiver vazia.
+ */
 Musica* obter_musica_atual(LoopPlayer* player);
+
+/**
+ * @brief Remove todas as músicas da playlist.
+ * 
+ * @param player Ponteiro para o LoopPlayer cuja playlist será limpa.
+ */
 void limpar_playlist(LoopPlayer* player);
 
 #endif // LOOPLAYER_H
