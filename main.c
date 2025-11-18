@@ -17,6 +17,7 @@ void exibir_menu() {
     printf("2. Próxima música\n");
     printf("3. Música anterior\n");
     printf("4. Listar músicas\n");
+    printf("5. Buscar música\n");
     printf("0. Sair\n");
     printf("\nEscolha uma opção: ");
 }
@@ -68,6 +69,18 @@ int main() {
                 printf("\nPressione ENTER para continuar...");
                 getchar();
                 break;
+
+            case 5: {
+                char termo[100];
+                printf("Digite o nome da musica: ");
+                fgets(termo, sizeof(termo), stdin);
+                termo[strcspn(termo, "\n")] = 0;
+                printf("\nResultados da busca:\n");
+                buscar_musicas(player, termo);
+                printf("\nPressione ENTER para continuar...");
+                getchar();
+                break;
+            }
 
             case 0:
                 printf("Saindo...\n");

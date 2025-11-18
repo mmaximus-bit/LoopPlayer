@@ -81,6 +81,14 @@ int remover_musica(LoopPlayer* player, const char* titulo);
 Musica* buscar_musica(LoopPlayer* player, const char* titulo);
 
 /**
+ * @brief Busca músicas que contenham o termo (busca parcial, case-insensitive)
+ *
+ * @param player Ponteiro para o LoopPlayer onde a busca será realizada.
+ * @param termo Termo de busca (parte do título ou artista).
+ */
+void buscar_musicas(LoopPlayer* player, const char* termo);
+
+/**
  * @brief Verifica se a playlist está vazia.
  * 
  * @param player Ponteiro para o LoopPlayer a ser verificado.
