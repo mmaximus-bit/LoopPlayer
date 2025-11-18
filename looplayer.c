@@ -16,11 +16,14 @@ LoopPlayer* criar_player() {
 }
 
 // Inserir música no final da lista
-int inserir_musica(LoopPlayer* player, const char* titulo) {
+int inserir_musica(LoopPlayer* player, const char* titulo, const char* artista) {
     Musica* nova = (Musica*)malloc(sizeof(Musica));
-    
+
     nova->titulo = (char*)malloc(strlen(titulo) + 1);
     strcpy(nova->titulo, titulo);
+
+    nova->artista = (char*)malloc(strlen(artista) + 1);
+    strcpy(nova->artista, artista);
     
     // Se é a primeira música
     if (player->cabeca == NULL) {
@@ -56,7 +59,7 @@ void listar_musicas(LoopPlayer* player) {
     int indice = 1;
     
     do {
-        printf("%d. %s", indice++, atual->titulo);
+        printf("%d. %s - %s", indice++, atual->titulo, atual->artista);
         if (atual == player->atual) {
             printf(" (atual)");
         }
@@ -115,10 +118,12 @@ void buscar_musicas(LoopPlayer* player, const char* termo) {
 
     do {
         char titulo_lower[512];
+        char artista_lower[512];
         str_to_lower(atual->titulo, titulo_lower, sizeof(titulo_lower));
+        str_to_lower(atual->artista, artista_lower, sizeof(artista_lower));
 
-        if (strstr(titulo_lower, termo_lower) != NULL) {
-            printf("%d. %s", indice, atual->titulo);
+        if (strstr(titulo_lower, termo_lower) != NULL || strstr(artista_lower, termo_lower) != NULL) {
+            printf("%d. %s - %s", indice, atual->titulo, atual->artista);
             if (atual == player->atual) {
                 printf(" (atual)");
             }

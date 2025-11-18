@@ -26,12 +26,13 @@ int main() {
     LoopPlayer* player = criar_player();
     int opcao;
     char titulo[100];
+    char artista[100];
 
     do {
         limpar_tela();
         if (!esta_vazia(player)) {
             Musica* atual = obter_musica_atual(player);
-            printf("\nMúsica atual: %s\n", atual->titulo);
+            printf("\nMúsica atual: %s - %s\n", atual->titulo, atual->artista);
         }
         exibir_menu();
         scanf("%d", &opcao);
@@ -42,14 +43,24 @@ int main() {
                 printf("Digite o título da música: ");
                 fgets(titulo, sizeof(titulo), stdin);
                 titulo[strcspn(titulo, "\n")] = 0; // Remover o \n
-                if (inserir_musica(player, titulo)) {
-                    printf("Música inserida com sucesso!\n");
+                printf("Digite o artista: ");
+                fgets(artista, sizeof(artista), stdin);
+                artista[strcspn(artista, "\n")] = 0;
+
+                if (inserir_musica(player, titulo, artista)) {
+                    printf("Música '%s' - '%s' adicionada com sucesso!\n", titulo, artista);
                 }
                 break;
 
             case 2:
                 if (proxima_musica(player)) {
-                    printf("Próxima música selecionada.\n");
+                    {
+                        Musica* atual = obter_musica_atual(player);
+                        if (atual)
+                            printf("Navegando para: '%s' - '%s'...\n", atual->titulo, atual->artista);
+                        else
+                            printf("Próxima música selecionada.\n");
+                    }
                 } else {
                     printf("Playlist vazia!\n");
                 }
@@ -57,7 +68,13 @@ int main() {
 
             case 3:
                 if (musica_anterior(player)) {
-                    printf("Música anterior selecionada.\n");
+                    {
+                        Musica* atual = obter_musica_atual(player);
+                        if (atual)
+                            printf("Navegando para: '%s' - '%s'...\n", atual->titulo, atual->artista);
+                        else
+                            printf("Música anterior selecionada.\n");
+                    }
                 } else {
                     printf("Playlist vazia!\n");
                 }

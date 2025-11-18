@@ -4,6 +4,7 @@
 // Estrutura para representar uma música na lista duplamente encadeada circular
 typedef struct Musica {
     char* titulo;              // Título da música
+    char* artista;             // Artista da música
     struct Musica* proxima;   // Ponteiro para próxima música
     struct Musica* anterior;  // Ponteiro para música anterior
 } Musica;
@@ -37,7 +38,7 @@ void destruir_player(LoopPlayer* player);
  * 
  * @return Retorna 1 se a inserção for bem-sucedida, ou 0 em caso de falha.
  */
-int inserir_musica(LoopPlayer* player, const char* titulo);
+int inserir_musica(LoopPlayer* player, const char* titulo, const char* artista);
 
 /**
  * @brief Insere uma nova música no início da playlist.
