@@ -4,6 +4,7 @@
 // Estrutura para representar uma música na lista duplamente encadeada circular
 typedef struct Musica {
     char* titulo;              // Título da música
+    char* artista;             // Artista da música
     struct Musica* proxima;   // Ponteiro para próxima música
     struct Musica* anterior;  // Ponteiro para música anterior
 } Musica;
@@ -37,7 +38,7 @@ void destruir_player(LoopPlayer* player);
  * 
  * @return Retorna 1 se a inserção for bem-sucedida, ou 0 em caso de falha.
  */
-int inserir_musica(LoopPlayer* player, const char* titulo);
+int inserir_musica(LoopPlayer* player, const char* titulo, const char* artista);
 
 /**
  * @brief Insere uma nova música no início da playlist.
@@ -65,11 +66,12 @@ int inserir_musica_apos(LoopPlayer* player, const char* titulo_ref, const char* 
  * 
  * @param player Ponteiro para o LoopPlayer onde a música será inserida.
  * @param titulo String contendo o título da música a ser inserida.
+ * @param artista String contendo o nome do artista.
  * @param posicao Posição onde a música será inserida (começa em 1).
  * 
  * @return Retorna 1 se a inserção for bem-sucedida, ou 0 em caso de falha.
  */
-int inserir_na_posicao(LoopPlayer* player, const char* titulo, int posicao);
+int inserir_na_posicao(LoopPlayer* player, const char* titulo, const char* artista, int posicao);
 
 /**
  * @brief Remove uma música da playlist pelo título.
@@ -100,6 +102,14 @@ int remover_da_posicao(LoopPlayer* player, int posicao);
  * @return Retorna um ponteiro para a Musica encontrada, ou NULL se não encontrada.
  */
 Musica* buscar_musica(LoopPlayer* player, const char* titulo);
+
+/**
+ * @brief Busca músicas que contenham o termo (busca parcial, case-insensitive)
+ *
+ * @param player Ponteiro para o LoopPlayer onde a busca será realizada.
+ * @param termo Termo de busca (parte do título ou artista).
+ */
+void buscar_musicas(LoopPlayer* player, const char* termo);
 
 /**
  * @brief Verifica se a playlist está vazia.

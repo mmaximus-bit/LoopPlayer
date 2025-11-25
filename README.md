@@ -18,11 +18,7 @@ A natureza **circular** da lista é perfeita para a função "Repetir", e a capa
 * **Navegação:**
     * `Próxima`: Avança para a próxima música.
     * `Anterior`: Retorna para a música anterior.
-* **Repetição (Looping):** Ao chegar ao fim da lista, "Próxima" leva automaticamente de volta à primeira música (e vice-versa com "Anterior").
-
-*(Opcional: Adicione se planeja fazer)*
-* [ ] Tocar música (simulação com `sleep`)
-* [ ] Buscar música por nome
+* **Repetição (Looping):** Ao chegar ao fim da lista, "Próxima" leva automaticamente de volta à primeira música (e vice-versa com "Anterior").e
 
 ## ⚙️ Estrutura de Dados
 

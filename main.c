@@ -19,6 +19,7 @@ void exibir_menu() {
     printf("4. Próxima música\n");
     printf("5. Música anterior\n");
     printf("6. Listar músicas\n");
+    printf("7. Buscar música\n");
     printf("0. Sair\n");
     printf("\nEscolha uma opção: ");
 }
@@ -27,26 +28,30 @@ int main() {
     LoopPlayer* player = criar_player();
     int opcao;
     char titulo[100];
+    char artista[100];
     int posicao;
 
     do {
         limpar_tela();
         if (!esta_vazia(player)) {
             Musica* atual = obter_musica_atual(player);
-            printf("\nMúsica atual: %s\n", atual->titulo);
+            printf("\nMúsica atual: %s - %s\n", atual->titulo, atual->artista);
             printf("Total de músicas: %d\n", player->quantidade);
         }
         exibir_menu();
         scanf("%d", &opcao);
-        getchar(); // Limpar o buffer
+        getchar();
 
         switch(opcao) {
             case 1:
                 printf("Digite o título da música: ");
                 fgets(titulo, sizeof(titulo), stdin);
                 titulo[strcspn(titulo, "\n")] = 0;
-                if (inserir_musica(player, titulo)) {
-                    printf("Música inserida com sucesso!\n");
+                printf("Digite o artista: ");
+                fgets(artista, sizeof(artista), stdin);
+                artista[strcspn(artista, "\n")] = 0;
+                if (inserir_musica(player, titulo, artista)) {
+                    printf("Música '%s' - '%s' adicionada com sucesso!\n", titulo, artista);
                 }
                 break;
 
@@ -54,10 +59,13 @@ int main() {
                 printf("Digite o título da música: ");
                 fgets(titulo, sizeof(titulo), stdin);
                 titulo[strcspn(titulo, "\n")] = 0;
+                printf("Digite o artista: ");
+                fgets(artista, sizeof(artista), stdin);
+                artista[strcspn(artista, "\n")] = 0;
                 printf("Digite a posição (1 a %d): ", player->quantidade + 1);
                 scanf("%d", &posicao);
                 getchar();
-                if (inserir_na_posicao(player, titulo, posicao)) {
+                if (inserir_na_posicao(player, titulo, artista, posicao)) {
                     printf("Música inserida na posição %d com sucesso!\n", posicao);
                 } else {
                     printf("Erro ao inserir música!\n");
@@ -81,7 +89,11 @@ int main() {
 
             case 4:
                 if (proxima_musica(player)) {
-                    printf("Próxima música selecionada.\n");
+                    Musica* atual = obter_musica_atual(player);
+                    if (atual)
+                        printf("Navegando para: '%s' - '%s'...\n", atual->titulo, atual->artista);
+                    else
+                        printf("Próxima música selecionada.\n");
                 } else {
                     printf("Playlist vazia!\n");
                 }
@@ -89,7 +101,11 @@ int main() {
 
             case 5:
                 if (musica_anterior(player)) {
-                    printf("Música anterior selecionada.\n");
+                    Musica* atual = obter_musica_atual(player);
+                    if (atual)
+                        printf("Navegando para: '%s' - '%s'...\n", atual->titulo, atual->artista);
+                    else
+                        printf("Música anterior selecionada.\n");
                 } else {
                     printf("Playlist vazia!\n");
                 }
@@ -102,6 +118,18 @@ int main() {
                 getchar();
                 break;
 
+            case 7: {
+                char termo[100];
+                printf("Digite o nome da musica: ");
+                fgets(termo, sizeof(termo), stdin);
+                termo[strcspn(termo, "\n")] = 0;
+                printf("\nResultados da busca:\n");
+                buscar_musicas(player, termo);
+                printf("\nPressione ENTER para continuar...");
+                getchar();
+                break;
+            }
+
             case 0:
                 printf("Saindo...\n");
                 break;
@@ -110,7 +138,7 @@ int main() {
                 printf("Opção inválida!\n");
         }
 
-        if (opcao != 0 && opcao != 6) {
+        if (opcao != 0 && opcao != 6 && opcao != 7) {
             printf("Pressione ENTER para continuar...");
             getchar();
         }
