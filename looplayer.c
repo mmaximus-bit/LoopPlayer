@@ -89,3 +89,103 @@ Musica* obter_musica_atual(LoopPlayer* player) {
     }
     return player->atual;
 }
+
+// Inserir música em uma posição específica
+int inserir_na_posicao(LoopPlayer* player, const char* titulo, int posicao) {
+    if (player == NULL || titulo == NULL || posicao < 1) {
+        return 0;
+    }
+    
+    // Se posição for 1, inserir no início
+    if (posicao == 1 || esta_vazia(player)) {
+        Musica* nova = (Musica*)malloc(sizeof(Musica));
+        nova->titulo = (char*)malloc(strlen(titulo) + 1);
+        strcpy(nova->titulo, titulo);
+        
+        if (esta_vazia(player)) {
+            player->cabeca = nova;
+            player->atual = nova;
+            nova->anterior = nova;
+            nova->proxima = nova;
+            player->quantidade++;
+            return 1;
+        }
+        
+        // Inserir no início
+        nova->proxima = player->cabeca;
+        nova->anterior = player->cabeca->anterior;
+        player->cabeca->anterior->proxima = nova;
+        player->cabeca->anterior = nova;
+        player->cabeca = nova;
+        player->quantidade++;
+        return 1;
+    }
+    
+    // Navegar até a posição desejada
+    Musica* atual = player->cabeca;
+    int pos_atual = 1;
+    
+    while (pos_atual < posicao - 1 && atual->proxima != player->cabeca) {
+        atual = atual->proxima;
+        pos_atual++;
+    }
+    
+    // Criar nova música
+    Musica* nova = (Musica*)malloc(sizeof(Musica));
+    nova->titulo = (char*)malloc(strlen(titulo) + 1);
+    strcpy(nova->titulo, titulo);
+    
+    // Inserir após a posição atual
+    nova->proxima = atual->proxima;
+    nova->anterior = atual;
+    atual->proxima->anterior = nova;
+    atual->proxima = nova;
+    
+    player->quantidade++;
+    return 1;
+}
+
+// Remover música de uma posição específica
+int remover_da_posicao(LoopPlayer* player, int posicao) {
+    if (esta_vazia(player) || posicao < 1 || posicao > player->quantidade) {
+        return 0;
+    }
+    
+    Musica* atual = player->cabeca;
+    int pos_atual = 1;
+    
+    // Navegar até a posição
+    while (pos_atual < posicao) {
+        atual = atual->proxima;
+        pos_atual++;
+    }
+    
+    // Se é o único elemento
+    if (player->quantidade == 1) {
+        free(atual->titulo);
+        free(atual);
+        player->cabeca = NULL;
+        player->atual = NULL;
+        player->quantidade = 0;
+        return 1;
+    }
+    
+    // Ajustar ponteiros dos vizinhos
+    atual->anterior->proxima = atual->proxima;
+    atual->proxima->anterior = atual->anterior;
+    
+    // Se estamos removendo a cabeça
+    if (atual == player->cabeca) {
+        player->cabeca = atual->proxima;
+    }
+    
+    // Se estamos removendo a música atual
+    if (atual == player->atual) {
+        player->atual = atual->proxima;
+    }
+    
+    free(atual->titulo);
+    free(atual);
+    player->quantidade--;
+    return 1;
+}

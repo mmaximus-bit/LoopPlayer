@@ -61,6 +61,17 @@ int inserir_musica_inicio(LoopPlayer* player, const char* titulo);
 int inserir_musica_apos(LoopPlayer* player, const char* titulo_ref, const char* novo_titulo);
 
 /**
+ * @brief Insere uma nova música em uma posição específica da playlist.
+ * 
+ * @param player Ponteiro para o LoopPlayer onde a música será inserida.
+ * @param titulo String contendo o título da música a ser inserida.
+ * @param posicao Posição onde a música será inserida (começa em 1).
+ * 
+ * @return Retorna 1 se a inserção for bem-sucedida, ou 0 em caso de falha.
+ */
+int inserir_na_posicao(LoopPlayer* player, const char* titulo, int posicao);
+
+/**
  * @brief Remove uma música da playlist pelo título.
  * 
  * @param player Ponteiro para o LoopPlayer de onde a música será removida.
@@ -69,6 +80,16 @@ int inserir_musica_apos(LoopPlayer* player, const char* titulo_ref, const char* 
  * @return Retorna 1 se a remoção for bem-sucedida, ou 0 se a música não for encontrada.
  */
 int remover_musica(LoopPlayer* player, const char* titulo);
+
+/**
+ * @brief Remove uma música da playlist por posição específica.
+ * 
+ * @param player Ponteiro para o LoopPlayer de onde a música será removida.
+ * @param posicao Posição da música a ser removida (começa em 1).
+ * 
+ * @return Retorna 1 se a remoção for bem-sucedida, ou 0 em caso de falha.
+ */
+int remover_da_posicao(LoopPlayer* player, int posicao);
 
 /**
  * @brief Busca uma música na playlist pelo título.
