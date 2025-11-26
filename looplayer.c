@@ -433,3 +433,39 @@ int embaralhar_playlist(LoopPlayer* player) {
     
     return 1;
 }
+
+// Libera toda a memória alocada pelo player
+void liberar_player(LoopPlayer* player) {
+    if (player == NULL) {
+        return;
+    }
+    
+    // Liberar a lista de músicas
+    if (!esta_vazia(player)) {
+        Musica* atual = player->cabeca;
+        
+        // Quebrar a circularidade para evitar loop infinito
+        player->cabeca->anterior->proxima = NULL;
+        
+        while (atual != NULL) {
+            Musica* temp = atual->proxima;  // Guardar próximo antes de liberar
+            
+            // Liberar strings alocadas
+            free(atual->titulo);
+            free(atual->artista);
+            
+            // Liberar o nó
+            free(atual);
+            
+            atual = temp;
+        }
+    }
+    
+    // Liberar a pilha de histórico
+    if (player->historico != NULL) {
+        destruir_pilha(player->historico);
+    }
+    
+    // Liberar a estrutura do player
+    free(player);
+}

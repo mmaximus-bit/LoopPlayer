@@ -289,4 +289,15 @@ int voltar_historico(LoopPlayer* player);
  */
 int embaralhar_playlist(LoopPlayer* player);
 
+/**
+ * @brief Libera toda a memória alocada pela playlist.
+ * 
+ * Percorre a lista circular e libera cada nó (título, artista e struct).
+ * Usa ponteiro temporário para não perder a referência durante a liberação.
+ * Também libera a pilha de histórico.
+ * 
+ * @param player Ponteiro para o LoopPlayer a ser liberado.
+ */
+void liberar_player(LoopPlayer* player);
+
 #endif // LOOPLAYER_H
