@@ -11,6 +11,7 @@ LoopPlayer* criar_player() {
     player->cabeca = NULL;
     player->atual = NULL;
     player->quantidade = 0;
+    player->historico = criar_pilha();
     
     return player;
 }
@@ -73,6 +74,8 @@ int proxima_musica(LoopPlayer* player) {
     if (esta_vazia(player)) {
         return 0;
     }
+    // Empilha a música atual no histórico antes de navegar
+    empilhar(player->historico, player->atual);
     player->atual = player->atual->proxima;
     return 1;
 }
@@ -82,6 +85,8 @@ int musica_anterior(LoopPlayer* player) {
     if (esta_vazia(player)) {
         return 0;
     }
+    // Empilha a música atual no histórico antes de navegar
+    empilhar(player->historico, player->atual);
     player->atual = player->atual->anterior;
     return 1;
 }
@@ -300,4 +305,81 @@ int mover_musica(LoopPlayer* player, int pos_origem, int pos_destino) {
     }
     
     return 1;
+}
+
+// ============ IMPLEMENTAÇÃO DA PILHA DE HISTÓRICO ============
+
+// Criar uma nova pilha vazia
+Pilha* criar_pilha() {
+    Pilha* pilha = (Pilha*)malloc(sizeof(Pilha));
+    pilha->topo = NULL;
+    pilha->tamanho = 0;
+    return pilha;
+}
+
+// Destruir a pilha e liberar memória
+void destruir_pilha(Pilha* pilha) {
+    if (pilha == NULL) return;
+    
+    NoPilha* atual = pilha->topo;
+    while (atual != NULL) {
+        NoPilha* proximo = atual->proximo;
+        free(atual);
+        atual = proximo;
+    }
+    free(pilha);
+}
+
+// Empilhar música no topo (push)
+int empilhar(Pilha* pilha, Musica* musica) {
+    if (pilha == NULL || musica == NULL) {
+        return 0;
+    }
+    
+    NoPilha* novo = (NoPilha*)malloc(sizeof(NoPilha));
+    if (novo == NULL) {
+        return 0;
+    }
+    
+    novo->musica = musica;
+    novo->proximo = pilha->topo;
+    pilha->topo = novo;
+    pilha->tamanho++;
+    
+    return 1;
+}
+
+// Desempilhar e retornar música do topo (pop)
+Musica* desempilhar(Pilha* pilha) {
+    if (pilha == NULL || pilha->topo == NULL) {
+        return NULL;
+    }
+    
+    NoPilha* topo = pilha->topo;
+    Musica* musica = topo->musica;
+    pilha->topo = topo->proximo;
+    pilha->tamanho--;
+    
+    free(topo);
+    return musica;
+}
+
+// Verificar se a pilha está vazia
+int pilha_vazia(Pilha* pilha) {
+    return (pilha == NULL || pilha->topo == NULL);
+}
+
+// Voltar para a música anterior do histórico
+int voltar_historico(LoopPlayer* player) {
+    if (player == NULL || pilha_vazia(player->historico)) {
+        return 0;
+    }
+    
+    Musica* musica_anterior = desempilhar(player->historico);
+    if (musica_anterior != NULL) {
+        player->atual = musica_anterior;
+        return 1;
+    }
+    
+    return 0;
 }
