@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include "looplayer.h"
 
 // Criar um novo player
@@ -382,4 +383,53 @@ int voltar_historico(LoopPlayer* player) {
     }
     
     return 0;
+}
+
+// Embaralhar a playlist usando o algoritmo Fisher-Yates
+int embaralhar_playlist(LoopPlayer* player) {
+    if (player == NULL || player->quantidade < 2) {
+        return 0;
+    }
+    
+    int n = player->quantidade;
+    
+    // PASSO 1: Criar array de ponteiros para as músicas
+    Musica** array = (Musica**)malloc(n * sizeof(Musica*));
+    if (array == NULL) {
+        return 0;
+    }
+    
+    // PASSO 2: Percorrer a lista e salvar ponteiros no array
+    Musica* atual = player->cabeca;
+    for (int i = 0; i < n; i++) {
+        array[i] = atual;
+        atual = atual->proxima;
+    }
+    
+    // PASSO 3: Embaralhar o array usando Fisher-Yates
+    srand((unsigned int)time(NULL));
+    for (int i = n - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        // Trocar array[i] com array[j]
+        Musica* temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    
+    // PASSO 4: Reconstruir a lista circular com a nova ordem
+    for (int i = 0; i < n; i++) {
+        int prox = (i + 1) % n;      // Próximo (último aponta para primeiro)
+        int ant = (i - 1 + n) % n;   // Anterior (primeiro aponta para último)
+        
+        array[i]->proxima = array[prox];
+        array[i]->anterior = array[ant];
+    }
+    
+    // Atualizar a cabeça para o primeiro do array embaralhado
+    player->cabeca = array[0];
+    
+    // Liberar o array temporário
+    free(array);
+    
+    return 1;
 }

@@ -276,4 +276,17 @@ int pilha_vazia(Pilha* pilha);
  */
 int voltar_historico(LoopPlayer* player);
 
+/**
+ * @brief Embaralha a playlist de forma aleatória (modo shuffle).
+ * 
+ * Utiliza o algoritmo Fisher-Yates para reordenar os nós da lista
+ * de forma aleatória. Reconstrói a lista circular religando os
+ * ponteiros proxima e anterior de todos os nós.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 em caso de falha.
+ */
+int embaralhar_playlist(LoopPlayer* player);
+
 #endif // LOOPLAYER_H

@@ -22,6 +22,7 @@ void exibir_menu() {
     printf("7. Buscar música\n");
     printf("8. Mover música\n");
     printf("9. Voltar pelo histórico\n");
+    printf("10. Embaralhar playlist (Shuffle)\n");
     printf("0. Sair\n");
     printf("\nEscolha uma opção: ");
 }
@@ -169,6 +170,26 @@ int main() {
                 break;
             }
 
+            case 10: {
+                if (player->quantidade < 2) {
+                    printf("É necessário ter pelo menos 2 músicas para embaralhar!\n");
+                } else {
+                    printf("\nPlaylist antes do shuffle:\n");
+                    listar_musicas(player);
+                    
+                    if (embaralhar_playlist(player)) {
+                        printf("\n*** Playlist embaralhada com sucesso! ***\n");
+                        printf("\nNova ordem:\n");
+                        listar_musicas(player);
+                    } else {
+                        printf("Erro ao embaralhar a playlist!\n");
+                    }
+                }
+                printf("\nPressione ENTER para continuar...");
+                getchar();
+                break;
+            }
+
             case 0:
                 printf("Saindo...\n");
                 break;
@@ -177,7 +198,7 @@ int main() {
                 printf("Opção inválida!\n");
         }
 
-        if (opcao != 0 && opcao != 6 && opcao != 7 && opcao != 8 && opcao != 9) {
+        if (opcao != 0 && opcao != 6 && opcao != 7 && opcao != 8 && opcao != 9 && opcao != 10) {
             printf("Pressione ENTER para continuar...");
             getchar();
         }
