@@ -77,7 +77,7 @@ int main() {
 
             case 3:
                 if (esta_vazia(player)) {
-                    printf("Playlist vazia!\n");
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
                 } else {
                     printf("Digite a posição da música a remover (1 a %d): ", player->quantidade);
                     scanf("%d", &posicao);
@@ -91,26 +91,26 @@ int main() {
                 break;
 
             case 4:
-                if (proxima_musica(player)) {
+                if (esta_vazia(player)) {
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
+                } else if (proxima_musica(player)) {
                     Musica* atual = obter_musica_atual(player);
                     if (atual)
                         printf("Navegando para: '%s' - '%s'...\n", atual->titulo, atual->artista);
                     else
                         printf("Próxima música selecionada.\n");
-                } else {
-                    printf("Playlist vazia!\n");
                 }
                 break;
 
             case 5:
-                if (musica_anterior(player)) {
+                if (esta_vazia(player)) {
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
+                } else if (musica_anterior(player)) {
                     Musica* atual = obter_musica_atual(player);
                     if (atual)
                         printf("Navegando para: '%s' - '%s'...\n", atual->titulo, atual->artista);
                     else
                         printf("Música anterior selecionada.\n");
-                } else {
-                    printf("Playlist vazia!\n");
                 }
                 break;
 
@@ -122,6 +122,12 @@ int main() {
                 break;
 
             case 7: {
+                if (esta_vazia(player)) {
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
+                    printf("\nPressione ENTER para continuar...");
+                    getchar();
+                    break;
+                }
                 char termo[100];
                 printf("Digite o nome da musica: ");
                 fgets(termo, sizeof(termo), stdin);
@@ -135,7 +141,7 @@ int main() {
 
             case 8: {
                 if (esta_vazia(player)) {
-                    printf("Playlist vazia!\n");
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
                 } else if (player->quantidade < 2) {
                     printf("É necessário ter pelo menos 2 músicas para mover!\n");
                 } else {
@@ -171,7 +177,9 @@ int main() {
             }
 
             case 10: {
-                if (player->quantidade < 2) {
+                if (esta_vazia(player)) {
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
+                } else if (player->quantidade < 2) {
                     printf("É necessário ter pelo menos 2 músicas para embaralhar!\n");
                 } else {
                     printf("\nPlaylist antes do shuffle:\n");
