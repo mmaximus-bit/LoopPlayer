@@ -247,3 +247,57 @@ void buscar_musicas(LoopPlayer* player, const char* termo) {
         printf("Nenhuma música encontrada\n");
     }
 }
+
+// Mover música de uma posição para outra
+int mover_musica(LoopPlayer* player, int pos_origem, int pos_destino) {
+    // Validações
+    if (esta_vazia(player) || pos_origem < 1 || pos_origem > player->quantidade ||
+        pos_destino < 1 || pos_destino > player->quantidade || pos_origem == pos_destino) {
+        return 0;
+    }
+    
+    // Se só tem uma música, não há o que mover
+    if (player->quantidade == 1) {
+        return 1;
+    }
+    
+    // Encontrar o nó na posição de origem
+    Musica* musica_mover = player->cabeca;
+    for (int i = 1; i < pos_origem; i++) {
+        musica_mover = musica_mover->proxima;
+    }
+    
+    // PASSO 1: Desligar o nó da sua posição atual (religar vizinhos)
+    musica_mover->anterior->proxima = musica_mover->proxima;
+    musica_mover->proxima->anterior = musica_mover->anterior;
+    
+    // Se estamos movendo a cabeça, atualizar para o próximo
+    if (musica_mover == player->cabeca) {
+        player->cabeca = musica_mover->proxima;
+    }
+    
+    // Ajustar pos_destino se a origem estava antes do destino
+    int destino_ajustado = pos_destino;
+    if (pos_origem < pos_destino) {
+        destino_ajustado--;
+    }
+    
+    // Encontrar o nó na posição de destino (após o desligamento)
+    Musica* destino = player->cabeca;
+    for (int i = 1; i < destino_ajustado; i++) {
+        destino = destino->proxima;
+    }
+    
+    // PASSO 2: Religar o nó na nova posição (após o nó destino)
+    musica_mover->proxima = destino->proxima;
+    musica_mover->anterior = destino;
+    destino->proxima->anterior = musica_mover;
+    destino->proxima = musica_mover;
+    
+    // Se o destino era posição 1, atualizar a cabeça
+    if (pos_destino == 1) {
+        player->cabeca = musica_mover;
+    }
+    
+    return 1;
+}
