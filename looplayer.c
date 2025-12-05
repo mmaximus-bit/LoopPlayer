@@ -8,6 +8,10 @@
 // Criar um novo player
 LoopPlayer* criar_player() {
     LoopPlayer* player = (LoopPlayer*)malloc(sizeof(LoopPlayer));
+    if (player == NULL) {
+        printf("Erro: Falha ao alocar memória para o player!\n");
+        return NULL;
+    }
     
     player->cabeca = NULL;
     player->atual = NULL;
@@ -20,11 +24,26 @@ LoopPlayer* criar_player() {
 // Inserir música no final da lista
 int inserir_musica(LoopPlayer* player, const char* titulo, const char* artista) {
     Musica* nova = (Musica*)malloc(sizeof(Musica));
+    if (nova == NULL) {
+        printf("Erro: Falha ao alocar memória para a música!\n");
+        return 0;
+    }
 
     nova->titulo = (char*)malloc(strlen(titulo) + 1);
+    if (nova->titulo == NULL) {
+        printf("Erro: Falha ao alocar memória para o título!\n");
+        free(nova);
+        return 0;
+    }
     strcpy(nova->titulo, titulo);
 
     nova->artista = (char*)malloc(strlen(artista) + 1);
+    if (nova->artista == NULL) {
+        printf("Erro: Falha ao alocar memória para o artista!\n");
+        free(nova->titulo);
+        free(nova);
+        return 0;
+    }
     strcpy(nova->artista, artista);
     
     // Se é a primeira música
@@ -109,9 +128,24 @@ int inserir_na_posicao(LoopPlayer* player, const char* titulo, const char* artis
     // Se posição for 1 ou lista vazia, inserir no início
     if (posicao == 1 || esta_vazia(player)) {
         Musica* nova = (Musica*)malloc(sizeof(Musica));
+        if (nova == NULL) {
+            printf("Erro: Falha ao alocar memória para a música!\n");
+            return 0;
+        }
         nova->titulo = (char*)malloc(strlen(titulo) + 1);
+        if (nova->titulo == NULL) {
+            printf("Erro: Falha ao alocar memória para o título!\n");
+            free(nova);
+            return 0;
+        }
         strcpy(nova->titulo, titulo);
         nova->artista = (char*)malloc(strlen(artista) + 1);
+        if (nova->artista == NULL) {
+            printf("Erro: Falha ao alocar memória para o artista!\n");
+            free(nova->titulo);
+            free(nova);
+            return 0;
+        }
         strcpy(nova->artista, artista);
         
         if (esta_vazia(player)) {
@@ -144,9 +178,24 @@ int inserir_na_posicao(LoopPlayer* player, const char* titulo, const char* artis
     
     // Criar nova música
     Musica* nova = (Musica*)malloc(sizeof(Musica));
+    if (nova == NULL) {
+        printf("Erro: Falha ao alocar memória para a música!\n");
+        return 0;
+    }
     nova->titulo = (char*)malloc(strlen(titulo) + 1);
+    if (nova->titulo == NULL) {
+        printf("Erro: Falha ao alocar memória para o título!\n");
+        free(nova);
+        return 0;
+    }
     strcpy(nova->titulo, titulo);
     nova->artista = (char*)malloc(strlen(artista) + 1);
+    if (nova->artista == NULL) {
+        printf("Erro: Falha ao alocar memória para o artista!\n");
+        free(nova->titulo);
+        free(nova);
+        return 0;
+    }
     strcpy(nova->artista, artista);
     
     // Inserir após a posição atual
@@ -313,6 +362,10 @@ int mover_musica(LoopPlayer* player, int pos_origem, int pos_destino) {
 // Criar uma nova pilha vazia
 Pilha* criar_pilha() {
     Pilha* pilha = (Pilha*)malloc(sizeof(Pilha));
+    if (pilha == NULL) {
+        printf("Erro: Falha ao alocar memória para a pilha!\n");
+        return NULL;
+    }
     pilha->topo = NULL;
     pilha->tamanho = 0;
     return pilha;
