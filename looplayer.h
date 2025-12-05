@@ -193,4 +193,19 @@ Musica* obter_musica_atual(LoopPlayer* player);
  */
 void limpar_playlist(LoopPlayer* player);
 
+/**
+ * @brief Move uma música de uma posição para outra na playlist.
+ * 
+ * Desliga o nó da posição de origem (religando seus vizinhos) e o religa
+ * na posição de destino. Manipulação cuidadosa de ponteiros em lista
+ * duplamente encadeada circular.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * @param pos_origem Posição atual da música (1 a quantidade).
+ * @param pos_destino Posição de destino da música (1 a quantidade).
+ * 
+ * @return Retorna 1 se a movimentação for bem-sucedida, ou 0 em caso de falha.
+ */
+int mover_musica(LoopPlayer* player, int pos_origem, int pos_destino);
+
 #endif // LOOPLAYER_H

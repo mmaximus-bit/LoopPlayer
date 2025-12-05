@@ -20,6 +20,7 @@ void exibir_menu() {
     printf("5. Música anterior\n");
     printf("6. Listar músicas\n");
     printf("7. Buscar música\n");
+    printf("8. Mover música\n");
     printf("0. Sair\n");
     printf("\nEscolha uma opção: ");
 }
@@ -130,6 +131,31 @@ int main() {
                 break;
             }
 
+            case 8: {
+                if (esta_vazia(player)) {
+                    printf("Playlist vazia!\n");
+                } else if (player->quantidade < 2) {
+                    printf("É necessário ter pelo menos 2 músicas para mover!\n");
+                } else {
+                    int pos_origem, pos_destino;
+                    printf("\nPlaylist atual:\n");
+                    listar_musicas(player);
+                    printf("\nDigite a posição da música a mover (1 a %d): ", player->quantidade);
+                    scanf("%d", &pos_origem);
+                    getchar();
+                    printf("Digite a posição de destino (1 a %d): ", player->quantidade);
+                    scanf("%d", &pos_destino);
+                    getchar();
+                    
+                    if (mover_musica(player, pos_origem, pos_destino)) {
+                        printf("Música movida da posição %d para %d com sucesso!\n", pos_origem, pos_destino);
+                    } else {
+                        printf("Erro ao mover música! Verifique as posições.\n");
+                    }
+                }
+                break;
+            }
+
             case 0:
                 printf("Saindo...\n");
                 break;
@@ -138,7 +164,7 @@ int main() {
                 printf("Opção inválida!\n");
         }
 
-        if (opcao != 0 && opcao != 6 && opcao != 7) {
+        if (opcao != 0 && opcao != 6 && opcao != 7 && opcao != 8) {
             printf("Pressione ENTER para continuar...");
             getchar();
         }
