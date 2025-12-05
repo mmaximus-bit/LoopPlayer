@@ -199,7 +199,10 @@ int main() {
             }
 
             case 0:
-                printf("Saindo...\n");
+                printf("Liberando memória...\n");
+                liberar_player(player);
+                printf("Memória liberada com sucesso!\n");
+                printf("Saindo... Até mais! 🎵\n");
                 break;
 
             default:
