@@ -11,19 +11,29 @@ void limpar_tela() {
     #endif
 }
 
+void pressione_enter_para_continuar() {
+    printf("\n\n--- Pressione ENTER para continuar ---");
+    getchar();
+}
+
 void exibir_menu() {
-    printf("\n=== LoopPlayer Menu ===\n");
-    printf("1. Inserir música no final\n");
-    printf("2. Inserir música em posição específica\n");
-    printf("3. Remover música por posição\n");
-    printf("4. Próxima música\n");
-    printf("5. Música anterior\n");
-    printf("6. Listar músicas\n");
-    printf("7. Buscar música\n");
-    printf("8. Mover música\n");
-    printf("9. Voltar pelo histórico\n");
-    printf("10. Embaralhar playlist (Shuffle)\n");
-    printf("0. Sair\n");
+    printf("\n");
+    printf("╔════════════════════════════════════╗\n");
+    printf("║      🎵 LoopPlayer - Menu 🎵      ║\n");
+    printf("╠════════════════════════════════════╣\n");
+    printf("║ 1.  Inserir música no final        ║\n");
+    printf("║ 2.  Inserir em posição específica  ║\n");
+    printf("║ 3.  Remover música por posição    ║\n");
+    printf("║ 4.  Próxima música                 ║\n");
+    printf("║ 5.  Música anterior                ║\n");
+    printf("║ 6.  Listar músicas                 ║\n");
+    printf("║ 7.  Buscar música                  ║\n");
+    printf("║ 8.  Mover música                   ║\n");
+    printf("║ 9.  Voltar pelo histórico          ║\n");
+    printf("║ 10. Embaralhar playlist (Shuffle)  ║\n");
+    printf("║                                    ║\n");
+    printf("║ 0.  Sair                           ║\n");
+    printf("╚════════════════════════════════════╝\n");
     printf("\nEscolha uma opção: ");
 }
 
@@ -36,11 +46,21 @@ int main() {
 
     do {
         limpar_tela();
+        
+        // Exibir status do player
+        printf("\n╔════════════════════════════════════╗\n");
+        printf("║        STATUS DO PLAYER            ║\n");
+        printf("╠════════════════════════════════════╣\n");
         if (!esta_vazia(player)) {
             Musica* atual = obter_musica_atual(player);
-            printf("\nMúsica atual: %s - %s\n", atual->titulo, atual->artista);
-            printf("Total de músicas: %d\n", player->quantidade);
+            printf("║ Atual: %-30s ║\n", atual->titulo);
+            printf("║ Artista: %-28s ║\n", atual->artista);
+            printf("║ Total de músicas: %-16d ║\n", player->quantidade);
+        } else {
+            printf("║ 🎵 Sua playlist está vazia!       ║\n");
         }
+        printf("╚════════════════════════════════════╝\n");
+        
         exibir_menu();
         scanf("%d", &opcao);
         getchar();
@@ -117,15 +137,13 @@ int main() {
             case 6:
                 printf("\nPlaylist completa:\n");
                 listar_musicas(player);
-                printf("\nPressione ENTER para continuar...");
-                getchar();
+                pressione_enter_para_continuar();
                 break;
 
             case 7: {
                 if (esta_vazia(player)) {
                     printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
-                    printf("\nPressione ENTER para continuar...");
-                    getchar();
+                    pressione_enter_para_continuar();
                     break;
                 }
                 char termo[100];
@@ -134,8 +152,7 @@ int main() {
                 termo[strcspn(termo, "\n")] = 0;
                 printf("\nResultados da busca:\n");
                 buscar_musicas(player, termo);
-                printf("\nPressione ENTER para continuar...");
-                getchar();
+                pressione_enter_para_continuar();
                 break;
             }
 
@@ -193,25 +210,22 @@ int main() {
                         printf("Erro ao embaralhar a playlist!\n");
                     }
                 }
-                printf("\nPressione ENTER para continuar...");
-                getchar();
+                pressione_enter_para_continuar();
                 break;
             }
 
             case 0:
-                printf("Liberando memória...\n");
+                printf("\n╔════════════════════════════════════╗\n");
+                printf("║   Liberando memória...             ║\n");
                 liberar_player(player);
-                printf("Memória liberada com sucesso!\n");
-                printf("Saindo... Até mais! 🎵\n");
+                printf("║   Memória liberada com sucesso!    ║\n");
+                printf("║   Saindo... Até mais! 🎵           ║\n");
+                printf("╚════════════════════════════════════╝\n\n");
                 break;
 
             default:
                 printf("Opção inválida!\n");
-        }
-
-        if (opcao != 0 && opcao != 6 && opcao != 7 && opcao != 8 && opcao != 9 && opcao != 10) {
-            printf("Pressione ENTER para continuar...");
-            getchar();
+                pressione_enter_para_continuar();
         }
 
     } while (opcao != 0);
