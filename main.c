@@ -21,6 +21,7 @@ void exibir_menu() {
     printf("6. Listar músicas\n");
     printf("7. Buscar música\n");
     printf("8. Mover música\n");
+    printf("9. Voltar pelo histórico\n");
     printf("0. Sair\n");
     printf("\nEscolha uma opção: ");
 }
@@ -156,6 +157,18 @@ int main() {
                 break;
             }
 
+            case 9: {
+                if (voltar_historico(player)) {
+                    Musica* atual = obter_musica_atual(player);
+                    if (atual) {
+                        printf("Voltando para: '%s' - '%s'\n", atual->titulo, atual->artista);
+                    }
+                } else {
+                    printf("Histórico vazio! Nenhuma música anterior para voltar.\n");
+                }
+                break;
+            }
+
             case 0:
                 printf("Saindo...\n");
                 break;
@@ -164,7 +177,7 @@ int main() {
                 printf("Opção inválida!\n");
         }
 
-        if (opcao != 0 && opcao != 6 && opcao != 7 && opcao != 8) {
+        if (opcao != 0 && opcao != 6 && opcao != 7 && opcao != 8 && opcao != 9) {
             printf("Pressione ENTER para continuar...");
             getchar();
         }

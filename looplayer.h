@@ -9,11 +9,24 @@ typedef struct Musica {
     struct Musica* anterior;  // Ponteiro para música anterior
 } Musica;
 
+// Estrutura do nó da Pilha Encadeada (para histórico de navegação)
+typedef struct NoPilha {
+    Musica* musica;            // Ponteiro para a música no histórico
+    struct NoPilha* proximo;   // Ponteiro para o próximo nó da pilha
+} NoPilha;
+
+// Estrutura da Pilha Encadeada
+typedef struct {
+    NoPilha* topo;             // Ponteiro para o topo da pilha
+    int tamanho;               // Quantidade de elementos na pilha
+} Pilha;
+
 // Estrutura principal do player
 typedef struct {
     Musica* cabeca;          // Ponteiro para o nó cabeça da lista circular
     Musica* atual;           // Música atualmente selecionada
     int quantidade;          // Quantidade de músicas na lista
+    Pilha* historico;        // Pilha de histórico de navegação
 } LoopPlayer;
 
 /**
@@ -207,5 +220,60 @@ void limpar_playlist(LoopPlayer* player);
  * @return Retorna 1 se a movimentação for bem-sucedida, ou 0 em caso de falha.
  */
 int mover_musica(LoopPlayer* player, int pos_origem, int pos_destino);
+
+// ============ FUNÇÕES DA PILHA DE HISTÓRICO ============
+
+/**
+ * @brief Cria uma nova pilha vazia.
+ * 
+ * @return Retorna um ponteiro para a Pilha criada.
+ */
+Pilha* criar_pilha();
+
+/**
+ * @brief Destrói a pilha e libera a memória.
+ * 
+ * @param pilha Ponteiro para a Pilha a ser destruída.
+ */
+void destruir_pilha(Pilha* pilha);
+
+/**
+ * @brief Empilha uma música no topo da pilha (push).
+ * 
+ * @param pilha Ponteiro para a Pilha.
+ * @param musica Ponteiro para a Música a ser empilhada.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 em caso de falha.
+ */
+int empilhar(Pilha* pilha, Musica* musica);
+
+/**
+ * @brief Desempilha e retorna a música do topo da pilha (pop).
+ * 
+ * @param pilha Ponteiro para a Pilha.
+ * 
+ * @return Retorna ponteiro para a Música desempilhada, ou NULL se vazia.
+ */
+Musica* desempilhar(Pilha* pilha);
+
+/**
+ * @brief Verifica se a pilha está vazia.
+ * 
+ * @param pilha Ponteiro para a Pilha.
+ * 
+ * @return Retorna 1 se vazia, ou 0 caso contrário.
+ */
+int pilha_vazia(Pilha* pilha);
+
+/**
+ * @brief Volta para a música anterior do histórico.
+ * 
+ * Dá pop na pilha de histórico e navega o player para essa música.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 se o histórico estiver vazio.
+ */
+int voltar_historico(LoopPlayer* player);
 
 #endif // LOOPLAYER_H
