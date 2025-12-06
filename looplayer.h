@@ -300,4 +300,30 @@ int embaralhar_playlist(LoopPlayer* player);
  */
 void liberar_player(LoopPlayer* player);
 
+/**
+ * @brief Avança X músicas na playlist (navegação inteligente).
+ * 
+ * Chama proxima_musica() X vezes em um loop para navegar várias músicas.
+ * Empilha no histórico antes de cada avanço.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * @param quantidade Número de músicas a avançar.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 em caso de erro.
+ */
+int avancar_musicas(LoopPlayer* player, int quantidade);
+
+/**
+ * @brief Retrocede X músicas na playlist (navegação inteligente).
+ * 
+ * Chama musica_anterior() X vezes em um loop para navegar várias músicas.
+ * Empilha no histórico antes de cada retrocesso.
+ * 
+ * @param player Ponteiro para o LoopPlayer.
+ * @param quantidade Número de músicas a retroceder.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 em caso de erro.
+ */
+int retroceder_musicas(LoopPlayer* player, int quantidade);
+
 #endif // LOOPLAYER_H

@@ -522,3 +522,43 @@ void liberar_player(LoopPlayer* player) {
     // Liberar a estrutura do player
     free(player);
 }
+
+// ============ NAVEGAÇÃO INTELIGENTE ============
+
+// Avançar X músicas na playlist
+int avancar_musicas(LoopPlayer* player, int quantidade) {
+    if (player == NULL || esta_vazia(player) || quantidade <= 0) {
+        return 0;
+    }
+    
+    // Limitar para não ultrapassar a playlist
+    if (quantidade > player->quantidade) {
+        quantidade = player->quantidade;
+    }
+    
+    // Avançar X vezes
+    for (int i = 0; i < quantidade; i++) {
+        proxima_musica(player);
+    }
+    
+    return 1;
+}
+
+// Retroceder X músicas na playlist
+int retroceder_musicas(LoopPlayer* player, int quantidade) {
+    if (player == NULL || esta_vazia(player) || quantidade <= 0) {
+        return 0;
+    }
+    
+    // Limitar para não ultrapassar a playlist
+    if (quantidade > player->quantidade) {
+        quantidade = player->quantidade;
+    }
+    
+    // Retroceder X vezes
+    for (int i = 0; i < quantidade; i++) {
+        musica_anterior(player);
+    }
+    
+    return 1;
+}

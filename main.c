@@ -31,7 +31,8 @@ void exibir_menu() {
     printf("║ 8.  Mover música                   ║\n");
     printf("║ 9.  Voltar pelo histórico          ║\n");
     printf("║ 10. Embaralhar playlist (Shuffle)  ║\n");
-    printf("║                                    ║\n");
+    printf("║ 11. Avançar X músicas              ║\n");
+    printf("║ 12. Retroceder X músicas           ║\n");
     printf("║ 0.  Sair                           ║\n");
     printf("╚════════════════════════════════════╝\n");
     printf("\nEscolha uma opção: ");
@@ -211,6 +212,52 @@ int main() {
                     }
                 }
                 pressione_enter_para_continuar();
+                break;
+            }
+
+            case 11: {
+                if (esta_vazia(player)) {
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
+                } else {
+                    int quantidade;
+                    printf("Quantas músicas deseja avançar? (1 a %d): ", player->quantidade);
+                    scanf("%d", &quantidade);
+                    getchar();
+                    
+                    if (avancar_musicas(player, quantidade)) {
+                        Musica* atual = obter_musica_atual(player);
+                        if (atual) {
+                            printf("\n✓ Avançou %d música(s)!\n", 
+                                   (quantidade > player->quantidade) ? player->quantidade : quantidade);
+                            printf("Agora tocando: '%s' - '%s'\n", atual->titulo, atual->artista);
+                        }
+                    } else {
+                        printf("Erro ao avançar! Verifique a quantidade.\n");
+                    }
+                }
+                break;
+            }
+
+            case 12: {
+                if (esta_vazia(player)) {
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
+                } else {
+                    int quantidade;
+                    printf("Quantas músicas deseja retroceder? (1 a %d): ", player->quantidade);
+                    scanf("%d", &quantidade);
+                    getchar();
+                    
+                    if (retroceder_musicas(player, quantidade)) {
+                        Musica* atual = obter_musica_atual(player);
+                        if (atual) {
+                            printf("\n✓ Retrocedeu %d música(s)!\n", 
+                                   (quantidade > player->quantidade) ? player->quantidade : quantidade);
+                            printf("Agora tocando: '%s' - '%s'\n", atual->titulo, atual->artista);
+                        }
+                    } else {
+                        printf("Erro ao retroceder! Verifique a quantidade.\n");
+                    }
+                }
                 break;
             }
 
