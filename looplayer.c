@@ -562,3 +562,341 @@ int retroceder_musicas(LoopPlayer* player, int quantidade) {
     
     return 1;
 }
+
+// ============ IMPLEMENTAÇÃO DO GRAFO DE SIMILARIDADE ============
+
+// Cria um novo grafo vazio
+GrafoSimilaridade* criar_grafo() {
+    GrafoSimilaridade* grafo = (GrafoSimilaridade*)malloc(sizeof(GrafoSimilaridade));
+    if (grafo == NULL) {
+        return NULL;
+    }
+    
+    grafo->vertices = NULL;
+    grafo->quantidade_vertices = 0;
+    
+    return grafo;
+}
+
+// Adiciona um vértice (música) ao grafo
+int adicionar_vertice_grafo(GrafoSimilaridade* grafo, Musica* musica) {
+    if (grafo == NULL || musica == NULL) {
+        return 0;
+    }
+    
+    // Verificar se a música já existe no grafo
+    NoGrafo* temp = grafo->vertices;
+    while (temp != NULL) {
+        if (temp->musica == musica) {
+            return 1; // Já existe, não faz nada
+        }
+        temp = temp->proximo;
+    }
+    
+    // Criar novo vértice
+    NoGrafo* novo_vertice = (NoGrafo*)malloc(sizeof(NoGrafo));
+    if (novo_vertice == NULL) {
+        return 0;
+    }
+    
+    novo_vertice->musica = musica;
+    novo_vertice->adjacentes = NULL;
+    novo_vertice->proximo = grafo->vertices;
+    grafo->vertices = novo_vertice;
+    grafo->quantidade_vertices++;
+    
+    return 1;
+}
+
+// Adiciona uma aresta entre duas músicas (não direcionada)
+int adicionar_aresta_grafo(GrafoSimilaridade* grafo, Musica* musica1, Musica* musica2) {
+    if (grafo == NULL || musica1 == NULL || musica2 == NULL || musica1 == musica2) {
+        return 0;
+    }
+    
+    // Adicionar vértices se não existirem
+    adicionar_vertice_grafo(grafo, musica1);
+    adicionar_vertice_grafo(grafo, musica2);
+    
+    // Encontrar vértices
+    NoGrafo* v1 = grafo->vertices;
+    while (v1 != NULL && v1->musica != musica1) {
+        v1 = v1->proximo;
+    }
+    
+    NoGrafo* v2 = grafo->vertices;
+    while (v2 != NULL && v2->musica != musica2) {
+        v2 = v2->proximo;
+    }
+    
+    if (v1 == NULL || v2 == NULL) {
+        return 0;
+    }
+    
+    // Verificar se aresta já existe (v1 -> v2)
+    NoAresta* temp = v1->adjacentes;
+    while (temp != NULL) {
+        if (temp->musica_relacionada == musica2) {
+            return 1; // Aresta já existe
+        }
+        temp = temp->proxima;
+    }
+    
+    // Adicionar aresta v1 -> v2
+    NoAresta* nova_aresta1 = (NoAresta*)malloc(sizeof(NoAresta));
+    if (nova_aresta1 == NULL) {
+        return 0;
+    }
+    nova_aresta1->musica_relacionada = musica2;
+    nova_aresta1->proxima = v1->adjacentes;
+    v1->adjacentes = nova_aresta1;
+    
+    // Adicionar aresta v2 -> v1 (não direcionada)
+    NoAresta* nova_aresta2 = (NoAresta*)malloc(sizeof(NoAresta));
+    if (nova_aresta2 == NULL) {
+        free(nova_aresta1);
+        return 0;
+    }
+    nova_aresta2->musica_relacionada = musica1;
+    nova_aresta2->proxima = v2->adjacentes;
+    v2->adjacentes = nova_aresta2;
+    
+    return 1;
+}
+
+// Verificar se música foi visitada
+static int foi_visitada(VisitadosBFS* visitados, Musica* musica) {
+    for (int i = 0; i < visitados->total_visitados; i++) {
+        if (visitados->visitados[i] == musica) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Adicionar à lista de visitados
+static int adicionar_visitado(VisitadosBFS* visitados, Musica* musica) {
+    Musica** novo_array = (Musica**)realloc(visitados->visitados, 
+                                           (visitados->total_visitados + 1) * sizeof(Musica*));
+    if (novo_array == NULL) {
+        return 0;
+    }
+    novo_array[visitados->total_visitados] = musica;
+    visitados->visitados = novo_array;
+    visitados->total_visitados++;
+    return 1;
+}
+
+// DFS recursivo
+static int dfs_auxiliar(GrafoSimilaridade* grafo, Musica* musica_atual, 
+                        VisitadosBFS* visitados, int profundidade) {
+    if (musica_atual == NULL || foi_visitada(visitados, musica_atual)) {
+        return 0;
+    }
+    
+    // Marcar como visitada
+    adicionar_visitado(visitados, musica_atual);
+    
+    // Imprimir com indentação
+    for (int i = 0; i < profundidade; i++) printf("  ");
+    printf("└─ %s - %s\n", musica_atual->titulo, musica_atual->artista);
+    
+    int contador = 1;
+    
+    // Encontrar vértice e explorar adjacentes
+    NoGrafo* v = grafo->vertices;
+    while (v != NULL) {
+        if (v->musica == musica_atual) {
+            NoAresta* aresta = v->adjacentes;
+            while (aresta != NULL) {
+                if (!foi_visitada(visitados, aresta->musica_relacionada)) {
+                    contador += dfs_auxiliar(grafo, aresta->musica_relacionada, visitados, profundidade + 1);
+                }
+                aresta = aresta->proxima;
+            }
+            break;
+        }
+        v = v->proximo;
+    }
+    
+    return contador;
+}
+
+// Busca em profundidade (DFS)
+int busca_profundidade(GrafoSimilaridade* grafo, Musica* musica_partida, VisitadosBFS* visitados) {
+    if (grafo == NULL || musica_partida == NULL || visitados == NULL) {
+        return 0;
+    }
+    
+    return dfs_auxiliar(grafo, musica_partida, visitados, 0);
+}
+
+// Busca em largura (BFS) com camadas
+int busca_largura_camadas(GrafoSimilaridade* grafo, Musica* musica_partida) {
+    if (grafo == NULL || musica_partida == NULL) {
+        return 0;
+    }
+    
+    // Alocar fila para BFS
+    Musica** fila = (Musica**)malloc(grafo->quantidade_vertices * sizeof(Musica*));
+    int* distancia = (int*)malloc(grafo->quantidade_vertices * sizeof(int));
+    
+    if (fila == NULL || distancia == NULL) {
+        free(fila);
+        free(distancia);
+        return 0;
+    }
+    
+    int inicio = 0, fim = 0;
+    
+    // Inicializar distâncias com -1 (não visitado)
+    for (int i = 0; i < grafo->quantidade_vertices; i++) {
+        distancia[i] = -1;
+    }
+    
+    // Mapa para associar música com índice de distância
+    Musica** lista_musicas = (Musica**)malloc(grafo->quantidade_vertices * sizeof(Musica*));
+    if (lista_musicas == NULL) {
+        free(fila);
+        free(distancia);
+        return 0;
+    }
+    
+    int idx_musica = 0;
+    NoGrafo* temp = grafo->vertices;
+    while (temp != NULL && idx_musica < grafo->quantidade_vertices) {
+        lista_musicas[idx_musica] = temp->musica;
+        if (temp->musica == musica_partida) {
+            distancia[idx_musica] = 0;
+        }
+        idx_musica++;
+        temp = temp->proximo;
+    }
+    
+    // Enfileirar música inicial
+    fila[fim++] = musica_partida;
+    
+    printf("\n📊 Exploração em CAMADAS (BFS) a partir de: %s - %s\n", 
+           musica_partida->titulo, musica_partida->artista);
+    printf("═══════════════════════════════════════════════════════════\n");
+    printf("Camada 0 (origem):\n");
+    printf("  └─ %s - %s\n", musica_partida->titulo, musica_partida->artista);
+    
+    int total_visitados = 1;
+    int proxima_camada = 1;
+    int musicas_camada_atual = 1;
+    int musicas_proxima_camada = 0;
+    
+    while (inicio < fim) {
+        Musica* musica_atual = fila[inicio++];
+        
+        // Encontrar vértice
+        NoGrafo* v = grafo->vertices;
+        while (v != NULL) {
+            if (v->musica == musica_atual) {
+                // Explorar adjacentes
+                NoAresta* aresta = v->adjacentes;
+                while (aresta != NULL) {
+                    Musica* adj = aresta->musica_relacionada;
+                    
+                    // Encontrar índice
+                    int idx = -1;
+                    for (int i = 0; i < idx_musica; i++) {
+                        if (lista_musicas[i] == adj) {
+                            idx = i;
+                            break;
+                        }
+                    }
+                    
+                    if (idx != -1 && distancia[idx] == -1) {
+                        distancia[idx] = distancia[idx_musica] == -1 ? proxima_camada : distancia[idx_musica] + 1;
+                        fila[fim++] = adj;
+                        musicas_proxima_camada++;
+                        total_visitados++;
+                    }
+                    
+                    aresta = aresta->proxima;
+                }
+                break;
+            }
+            v = v->proximo;
+        }
+        
+        musicas_camada_atual--;
+        
+        // Se terminou camada, imprimir próxima
+        if (musicas_camada_atual == 0 && musicas_proxima_camada > 0) {
+            printf("\nCamada %d (distância %d):\n", proxima_camada, proxima_camada);
+            for (int i = inicio; i < fim && i < grafo->quantidade_vertices; i++) {
+                printf("  └─ %s - %s\n", fila[i]->titulo, fila[i]->artista);
+            }
+            musicas_camada_atual = musicas_proxima_camada;
+            musicas_proxima_camada = 0;
+            proxima_camada++;
+        }
+    }
+    
+    free(fila);
+    free(distancia);
+    free(lista_musicas);
+    
+    return total_visitados;
+}
+
+// Lista músicas relacionadas (vizinhos diretos)
+void listar_relacionadas(GrafoSimilaridade* grafo, Musica* musica) {
+    if (grafo == NULL || musica == NULL) {
+        return;
+    }
+    
+    // Encontrar vértice
+    NoGrafo* v = grafo->vertices;
+    while (v != NULL) {
+        if (v->musica == musica) {
+            printf("\n🎵 Músicas relacionadas a: %s - %s\n", musica->titulo, musica->artista);
+            printf("═══════════════════════════════════════════════════════════\n");
+            
+            if (v->adjacentes == NULL) {
+                printf("Nenhuma música relacionada encontrada.\n");
+            } else {
+                int contador = 1;
+                NoAresta* aresta = v->adjacentes;
+                while (aresta != NULL) {
+                    printf("%d. %s - %s\n", contador++, 
+                           aresta->musica_relacionada->titulo, 
+                           aresta->musica_relacionada->artista);
+                    aresta = aresta->proxima;
+                }
+            }
+            return;
+        }
+        v = v->proximo;
+    }
+    
+    printf("Música não encontrada no grafo.\n");
+}
+
+// Libera o grafo
+void liberar_grafo(GrafoSimilaridade* grafo) {
+    if (grafo == NULL) {
+        return;
+    }
+    
+    NoGrafo* v = grafo->vertices;
+    while (v != NULL) {
+        NoGrafo* v_temp = v;
+        v = v->proximo;
+        
+        // Liberar adjacentes
+        NoAresta* a = v_temp->adjacentes;
+        while (a != NULL) {
+            NoAresta* a_temp = a;
+            a = a->proxima;
+            free(a_temp);
+        }
+        
+        free(v_temp);
+    }
+    
+    free(grafo);
+}
