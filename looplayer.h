@@ -21,12 +21,40 @@ typedef struct {
     int tamanho;               // Quantidade de elementos na pilha
 } Pilha;
 
+// ============ ESTRUTURAS PARA GRAFO DE SIMILARIDADE ============
+
+// Nó da lista de adjacência (aresta do grafo)
+typedef struct NoAresta {
+    Musica* musica_relacionada;    // Ponteiro para a música relacionada
+    struct NoAresta* proxima;      // Próxima aresta
+} NoAresta;
+
+// Vértice do grafo (nó com lista de adjacência)
+typedef struct NoGrafo {
+    Musica* musica;                // Ponteiro para a música (vértice)
+    NoAresta* adjacentes;          // Lista de adjacência (músicas relacionadas)
+    struct NoGrafo* proximo;       // Próximo nó na lista de vértices
+} NoGrafo;
+
+// Estrutura do Grafo de Similaridade
+typedef struct {
+    NoGrafo* vertices;             // Lista de vértices
+    int quantidade_vertices;       // Quantidade de vértices
+} GrafoSimilaridade;
+
+// Estrutura para rastrear visitados em BFS/DFS
+typedef struct {
+    Musica** visitados;            // Array de ponteiros para músicas visitadas
+    int total_visitados;           // Quantidade de visitados
+} VisitadosBFS;
+
 // Estrutura principal do player
 typedef struct {
     Musica* cabeca;          // Ponteiro para o nó cabeça da lista circular
     Musica* atual;           // Música atualmente selecionada
     int quantidade;          // Quantidade de músicas na lista
     Pilha* historico;        // Pilha de histórico de navegação
+    GrafoSimilaridade* grafo; // Grafo de similaridade entre músicas
 } LoopPlayer;
 
 /**
@@ -325,5 +353,84 @@ int avancar_musicas(LoopPlayer* player, int quantidade);
  * @return Retorna 1 se bem-sucedido, ou 0 em caso de erro.
  */
 int retroceder_musicas(LoopPlayer* player, int quantidade);
+
+// ============ FUNÇÕES DO GRAFO DE SIMILARIDADE ============
+
+/**
+ * @brief Cria um novo grafo de similaridade vazio.
+ * 
+ * @return Retorna um ponteiro para o GrafoSimilaridade criado, ou NULL em caso de falha.
+ */
+GrafoSimilaridade* criar_grafo();
+
+/**
+ * @brief Adiciona um vértice (música) ao grafo.
+ * 
+ * Se a música já existe no grafo, não faz nada.
+ * 
+ * @param grafo Ponteiro para o GrafoSimilaridade.
+ * @param musica Ponteiro para a música a ser adicionada como vértice.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 em caso de erro.
+ */
+int adicionar_vertice_grafo(GrafoSimilaridade* grafo, Musica* musica);
+
+/**
+ * @brief Adiciona uma aresta entre duas músicas no grafo (não direcionada).
+ * 
+ * Cria uma aresta entre musica1 e musica2, indicando que elas são relacionadas.
+ * A aresta é não direcionada (conecta nos dois sentidos).
+ * 
+ * @param grafo Ponteiro para o GrafoSimilaridade.
+ * @param musica1 Primeira música da aresta.
+ * @param musica2 Segunda música da aresta.
+ * 
+ * @return Retorna 1 se bem-sucedido, ou 0 em caso de erro.
+ */
+int adicionar_aresta_grafo(GrafoSimilaridade* grafo, Musica* musica1, Musica* musica2);
+
+/**
+ * @brief Busca em profundidade (DFS) a partir de uma música.
+ * 
+ * Explora o grafo em profundidade, visitando todas as músicas relacionadas.
+ * Imprime cada música visitada e retorna total de relacionadas encontradas.
+ * 
+ * @param grafo Ponteiro para o GrafoSimilaridade.
+ * @param musica_partida Música inicial da busca.
+ * @param visitados Estrutura para rastrear visitados.
+ * 
+ * @return Retorna o total de músicas relacionadas encontradas.
+ */
+int busca_profundidade(GrafoSimilaridade* grafo, Musica* musica_partida, VisitadosBFS* visitados);
+
+/**
+ * @brief Busca em largura (BFS) a partir de uma música com camadas.
+ * 
+ * Explora o grafo em camadas (distância de arestas), mostrando qual nível
+ * cada música relacionada está. Útil para "recomendações em camadas".
+ * 
+ * @param grafo Ponteiro para o GrafoSimilaridade.
+ * @param musica_partida Música inicial da busca.
+ * 
+ * @return Retorna o total de músicas relacionadas encontradas.
+ */
+int busca_largura_camadas(GrafoSimilaridade* grafo, Musica* musica_partida);
+
+/**
+ * @brief Lista todas as músicas relacionadas a uma música (vizinhos diretos).
+ * 
+ * Mostra apenas os vértices conectados por uma única aresta.
+ * 
+ * @param grafo Ponteiro para o GrafoSimilaridade.
+ * @param musica Música para listar relacionadas.
+ */
+void listar_relacionadas(GrafoSimilaridade* grafo, Musica* musica);
+
+/**
+ * @brief Libera toda a memória alocada pelo grafo.
+ * 
+ * @param grafo Ponteiro para o GrafoSimilaridade a ser liberado.
+ */
+void liberar_grafo(GrafoSimilaridade* grafo);
 
 #endif // LOOPLAYER_H

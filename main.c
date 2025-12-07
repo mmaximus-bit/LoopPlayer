@@ -33,6 +33,8 @@ void exibir_menu() {
     printf("║ 10. Embaralhar playlist (Shuffle)  ║\n");
     printf("║ 11. Avançar X músicas              ║\n");
     printf("║ 12. Retroceder X músicas           ║\n");
+    printf("║ 13. Ver relacionadas (DFS)         ║\n");
+    printf("║ 14. Explorar recomendações (BFS)   ║\n");
     printf("║ 0.  Sair                           ║\n");
     printf("╚════════════════════════════════════╝\n");
     printf("\nEscolha uma opção: ");
@@ -40,6 +42,7 @@ void exibir_menu() {
 
 int main() {
     LoopPlayer* player = criar_player();
+    player->grafo = criar_grafo();  // Criar grafo de similaridade
     int opcao;
     char titulo[100];
     char artista[100];
@@ -261,9 +264,62 @@ int main() {
                 break;
             }
 
+            case 13: {
+                if (esta_vazia(player)) {
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
+                } else {
+                    Musica* atual = obter_musica_atual(player);
+                    printf("\nExperimente conectar músicas do mesmo artista, álbum ou gênero.\n");
+                    printf("Por exemplo, digite: \"conectar_musicas(player->grafo, musica1, musica2)\" no código.\n");
+                    
+                    if (player->grafo && player->grafo->quantidade_vertices > 0) {
+                        VisitadosBFS visitados = {NULL, 0};
+                        printf("\n🔍 Explorando músicas relacionadas via DFS...\n");
+                        printf("════════════════════════════════════════════════════════════\n");
+                        printf("Partindo de: %s - %s\n", atual->titulo, atual->artista);
+                        printf("Relacionadas encontradas:\n");
+                        
+                        int total = busca_profundidade(player->grafo, atual, &visitados);
+                        printf("\nTotal de músicas exploradas (DFS): %d\n", total);
+                        
+                        if (visitados.visitados != NULL) {
+                            free(visitados.visitados);
+                        }
+                    } else {
+                        printf("\n📌 Nenhuma relação de similaridade cadastrada ainda.\n");
+                        printf("As músicas serão conectadas conforme você as adiciona com artistas/álbuns iguais.\n");
+                        listar_relacionadas(player->grafo, atual);
+                    }
+                }
+                pressione_enter_para_continuar();
+                break;
+            }
+
+            case 14: {
+                if (esta_vazia(player)) {
+                    printf("\n🎵 Sua playlist está vazia! Adicione algumas músicas primeiro.\n");
+                } else {
+                    Musica* atual = obter_musica_atual(player);
+                    
+                    if (player->grafo && player->grafo->quantidade_vertices > 0) {
+                        printf("\n");
+                        int total = busca_largura_camadas(player->grafo, atual);
+                        printf("\nTotal de músicas exploradas (BFS): %d\n", total);
+                    } else {
+                        printf("\n📌 Nenhuma relação de similaridade cadastrada ainda.\n");
+                        printf("As músicas serão conectadas conforme você as adiciona com artistas/álbuns iguais.\n");
+                    }
+                }
+                pressione_enter_para_continuar();
+                break;
+            }
+
             case 0:
                 printf("\n╔════════════════════════════════════╗\n");
                 printf("║   Liberando memória...             ║\n");
+                if (player->grafo != NULL) {
+                    liberar_grafo(player->grafo);
+                }
                 liberar_player(player);
                 printf("║   Memória liberada com sucesso!    ║\n");
                 printf("║   Saindo... Até mais! 🎵           ║\n");
